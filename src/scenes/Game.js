@@ -10,6 +10,9 @@ export default class Game extends Phaser.Scene {
   cursors
   /** @type {Phaser.Physics.Arcade.Group} */
   carrots
+  carrotsCollected = 0
+  /** @type {Phaser.GameObjects.Text} */
+  carrotsCollectedText
 
   constructor() {
     super('game')
@@ -58,6 +61,9 @@ export default class Game extends Phaser.Scene {
       undefined,
       this
     )
+
+    const style = { color: '#000', fontSize: 24 }
+    this.carrotsCollectedText = this.add.text(240, 10, 'Carrots: 0', style).setScrollFactor(0).setOrigin(0.5, 0)
   }
 
   update(t, dt) {
@@ -123,5 +129,8 @@ export default class Game extends Phaser.Scene {
   handleCollectCarrot(player, carrot) {
     this.carrots.killAndHide(carrot)
     this.physics.world.disableBody(carrot.body)
+    this.carrotsCollected++
+    const value = `Carrots: ${this.carrotsCollected}`
+    this.carrotsCollectedText.text = value
   }
 }
