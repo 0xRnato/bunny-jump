@@ -5,6 +5,8 @@ export default class Game extends Phaser.Scene {
   player
   /** @type {Phaser.Physics.Arcade.StaticGroup} */
   platforms
+  /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
+  cursors
 
   constructor() {
     super('game')
@@ -14,6 +16,7 @@ export default class Game extends Phaser.Scene {
     this.load.image('background', 'assets/bg_layer1.png')
     this.load.image('platform', 'assets/ground_grass.png')
     this.load.image('bunny-stand', 'assets/bunny1_stand.png')
+    this.cursors = this.input.keyboard.createCursorKeys()
   }
 
   create() {
@@ -40,7 +43,7 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.player)
   }
 
-  update() {
+  update(t, dt) {
     this.platforms.children.iterate(child => {
       /** @type {Phaser.Physics.Arcade.Sprite} */
       const platform = child
@@ -54,6 +57,14 @@ export default class Game extends Phaser.Scene {
     const touchingDown = this.player.body.touching.down
     if (touchingDown) {
       this.player.setVelocityY(-300)
+    }
+
+    if (this.cursors.left.isDown && !touchingDown) {
+      this.player.setVelocityX(-200)
+    } else if (this.cursors.right.isDown && !touchingDown) {
+      this.player.setVelocityX(200)
+    } else {
+      this.player.setVelocityX(0)
     }
   }
 }
